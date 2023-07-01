@@ -1,25 +1,24 @@
 
 int buzzerPin = 9;   //initialize buzzer
 int led = 13;                // the pin that the LED is atteched to
-int greenled = 12;                // for user response
 int sensor = 2;              // the pin that the sensor is atteched to
 int state = LOW;             // by default, no motion detected
 int val = 0;                 // variable to store the sensor status (value)
-
-greenledon = 0;
-bool userstate = false;
-
+int button = 12;
+int buttonVal = 0;
 
 void setup() {
-  pinMode(led, OUTPUT);      // initalize LED as an output
-  pinMode(greenled, INPUT);   
-  pinMode(sensor, INPUT);    // initialize sensor as an input
+  pinMode(led, OUTPUT);      // initalize LED as an output 
+  pinMode(button, INPUT);      // initalize LED as an output 
+  pinMode(sensor, INPUT);    // initialize button as an input
   pinMode(buzzerPin, OUTPUT); //addigning pin to Output mode
   Serial.begin(9600);        // initialize serial
 }
 
 void loop(){
   val = digitalRead(sensor);   // read sensor value
+  buttonVal = digitalRead(button);
+  
   if (val == HIGH) {           // check if the sensor is HIGH
     digitalWrite(led, HIGH);   // turn LED ON
     Serial.println(" detecting........!"); 
@@ -27,16 +26,16 @@ void loop(){
     delay(550);
     noTone(buzzerPin);
     delay(100);   // delay 100 milliseconds 
-    userstate = false;
-    
-    if (greenled){
-      userstate = true;
-       digitalWrite(greenled, HIGH);   // turn LED ON
-    }
     
     if (state == LOW) {
       Serial.println("Motion detected!"); 
       state = HIGH;       // update variable state to HIGH
+    }
+    if (buttonVal == HIGH){
+      digitalWrite(led, LOW);   // turn LED ON
+      Serial.print("farmer responded\n");
+      delay(5000); // delay for 5 secs and continues buzzing
+      tone(buzzerPin, 0); //buzzer stops                          
     }
   } 
   else {
